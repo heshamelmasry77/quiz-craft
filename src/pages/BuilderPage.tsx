@@ -12,6 +12,7 @@ import {
   toggleOptionCorrect,
 } from "../store/quizSlice";
 import type { QuestionType } from "../types/quiz";
+import { clearQuizStorage } from "../lib/storage";
 
 export default function BuilderPage() {
   const dispatch = useAppDispatch();
@@ -26,7 +27,13 @@ export default function BuilderPage() {
         <button className="px-3 py-2 border rounded" onClick={() => dispatch(undo())}>
           Undo
         </button>
-        <button className="px-3 py-2 border rounded" onClick={() => dispatch(clearAll())}>
+        <button
+          className="px-3 py-2 border rounded"
+          onClick={() => {
+            dispatch(clearAll());
+            clearQuizStorage();
+          }}
+        >
           Clear quiz
         </button>
       </header>
