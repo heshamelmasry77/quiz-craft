@@ -49,8 +49,8 @@ const quizSlice = createSlice({
       if (q) q.type = action.payload.type;
     },
     undo(state) {
-      const prev = state.history.pop();
-      if (prev) state.questions = prev.questions;
+      const prev = state.history.pop(); // Get last state from history
+      if (prev) state.questions = prev.questions; // Restore questions
     },
     clearAll(state) {
       pushHistory(state);
