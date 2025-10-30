@@ -1,29 +1,29 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ID, Question, QuestionType, QuizState } from "../types/quiz";
+import type { ID, Question, QuestionType, QuizState, Option } from "../types/quiz";
 
 // Small helper for IDs creation
 const makeId = () => crypto.randomUUID();
 
-// Factory for a new blank question
+const blankOptions = (): Option[] => [
+  { id: makeId(), text: "", isCorrect: false },
+  { id: makeId(), text: "", isCorrect: false },
+];
+
 const newQuestion = (type: QuestionType = "single"): Question => ({
   id: makeId(),
   type,
   title: "",
+  options: type === "short" ? [] : blankOptions(),
 });
 
-type QuizStoreState = QuizState & {
-  // Simple undo buffer
-  history: QuizState[];
-};
+type QuizStoreState = QuizState & { history: QuizState[] };
 
-const initialState: QuizStoreState = {
-  questions: [],
-  history: [],
-};
+const initialState: QuizStoreState = { questions: [], history: [] };
 
 function pushHistory(state: QuizStoreState) {
   state.history.push({ questions: JSON.parse(JSON.stringify(state.questions)) });
   if (state.history.length > 25) {
+    // limit history size
     state.history.shift();
   }
 }
@@ -40,26 +40,82 @@ const quizSlice = createSlice({
       pushHistory(state);
       state.questions = state.questions.filter((q) => q.id !== action.payload);
     },
+    clearAll(state) {
+      if (state.questions.length) pushHistory(state);
+      state.questions = [];
+    },
+
     updateQuestionTitle(state, action: PayloadAction<{ id: ID; title: string }>) {
       const q = state.questions.find((q) => q.id === action.payload.id);
       if (q) q.title = action.payload.title;
     },
+    // ensure options array shape when switching type
     setQuestionType(state, action: PayloadAction<{ id: ID; type: QuestionType }>) {
       const q = state.questions.find((q) => q.id === action.payload.id);
-      if (q) q.type = action.payload.type;
+      if (!q) return;
+      q.type = action.payload.type;
+      if (q.type === "short") q.options = [];
+      else if (q.options.length < 2) q.options = blankOptions();
     },
-    undo(state) {
-      const prev = state.history.pop(); // Get last state from history
-      if (prev) state.questions = prev.questions; // Restore questions
-    },
-    clearAll(state) {
+
+    // ===== Options Management =====
+
+    addOption(state, action: PayloadAction<{ questionId: ID }>) {
+      const q = state.questions.find((q) => q.id === action.payload.questionId);
+      if (!q || q.type === "short") return; // no options
       pushHistory(state);
-      state.questions = [];
+      q.options.push({ id: makeId(), text: "", isCorrect: false }); // new blank option for multiple/single choice
+    },
+
+    removeOption(state, action: PayloadAction<{ questionId: ID; optionId: ID }>) {
+      const q = state.questions.find((q) => q.id === action.payload.questionId);
+      if (!q || q.type === "short") return;
+      pushHistory(state);
+      q.options = q.options.filter((o) => o.id !== action.payload.optionId);
+    },
+
+    updateOptionText(state, action: PayloadAction<{ questionId: ID; optionId: ID; text: string }>) {
+      const q = state.questions.find((q) => q.id === action.payload.questionId);
+      const o = q?.options.find((o) => o.id === action.payload.optionId);
+      if (o) o.text = action.payload.text;
+    },
+
+    // (toggling a boolean)
+    toggleOptionCorrect(state, action: PayloadAction<{ questionId: ID; optionId: ID }>) {
+      const q = state.questions.find((q) => q.id === action.payload.questionId);
+      if (!q || q.type === "short") return; // no options
+
+      if (q.type === "single") {
+        // single choice
+        const target = action.payload.optionId;
+        q.options = q.options.map((o) => ({
+          ...o,
+          isCorrect: o.id === target ? !o.isCorrect : false,
+        }));
+      } else {
+        const o = q.options.find((o) => o.id === action.payload.optionId);
+        if (o) o.isCorrect = !o.isCorrect; // multiple
+      }
+    },
+
+    undo(state) {
+      const prev = state.history.pop();
+      if (prev) state.questions = prev.questions;
     },
   },
 });
 
-export const { addQuestion, removeQuestion, updateQuestionTitle, setQuestionType, undo, clearAll } =
-  quizSlice.actions;
+export const {
+  addQuestion,
+  removeQuestion,
+  clearAll,
+  updateQuestionTitle,
+  setQuestionType,
+  addOption,
+  removeOption,
+  updateOptionText,
+  toggleOptionCorrect,
+  undo,
+} = quizSlice.actions;
 
 export default quizSlice.reducer;

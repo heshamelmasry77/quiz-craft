@@ -2,10 +2,14 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
   addQuestion,
   removeQuestion,
+  clearAll,
+  undo,
   setQuestionType,
   updateQuestionTitle,
-  undo,
-  clearAll,
+  addOption,
+  removeOption,
+  updateOptionText,
+  toggleOptionCorrect,
 } from "../store/quizSlice";
 import type { QuestionType } from "../types/quiz";
 
@@ -48,6 +52,7 @@ export default function BuilderPage() {
           <li key={q.id} className="border rounded p-4">
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Q{idx + 1}</span>
+
               <select
                 aria-label="Question type"
                 className="border rounded px-2 py-1"
@@ -77,6 +82,55 @@ export default function BuilderPage() {
                 onChange={(e) => dispatch(updateQuestionTitle({ id: q.id, title: e.target.value }))}
               />
             </label>
+
+            {q.type !== "short" && (
+              <div className="mt-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium">Options</h3>
+                  <button
+                    className="px-2 py-1 border rounded"
+                    onClick={() => dispatch(addOption({ questionId: q.id }))}
+                  >
+                    + Add option
+                  </button>
+                </div>
+
+                <ul className="mt-2 space-y-2">
+                  {q.options.map((o) => (
+                    <li key={o.id} className="flex items-center gap-2">
+                      <input
+                        aria-label="Mark correct"
+                        type={q.type === "single" ? "radio" : "checkbox"}
+                        checked={!!o.isCorrect}
+                        onChange={() =>
+                          dispatch(toggleOptionCorrect({ questionId: q.id, optionId: o.id }))
+                        }
+                      />
+                      <input
+                        aria-label="Option text"
+                        className="flex-1 border rounded px-2 py-1"
+                        value={o.text}
+                        onChange={(e) =>
+                          dispatch(
+                            updateOptionText({
+                              questionId: q.id,
+                              optionId: o.id,
+                              text: e.target.value,
+                            }),
+                          )
+                        }
+                      />
+                      <button
+                        className="px-2 py-1 border rounded"
+                        onClick={() => dispatch(removeOption({ questionId: q.id, optionId: o.id }))}
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </li>
         ))}
       </ol>
