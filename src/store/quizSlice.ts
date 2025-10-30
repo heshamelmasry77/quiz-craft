@@ -102,6 +102,19 @@ const quizSlice = createSlice({
       const prev = state.history.pop();
       if (prev) state.questions = prev.questions;
     },
+    hydrate(state, action: PayloadAction<QuizState | null>) {
+      // simply replaces the current quiz list with the one loaded from storage.
+      // If nothing was saved, do nothing.
+      if (!action.payload) {
+        return;
+      }
+
+      // Replace state with the loaded quiz
+      state.questions = action.payload.questions ?? [];
+
+      // Reset undo stack since this is a new session
+      state.history = [];
+    },
   },
 });
 
@@ -116,6 +129,7 @@ export const {
   updateOptionText,
   toggleOptionCorrect,
   undo,
+  hydrate,
 } = quizSlice.actions;
 
 export default quizSlice.reducer;
