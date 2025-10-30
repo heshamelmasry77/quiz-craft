@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import quizReducer, { hydrate } from "./quizSlice";
+import { debounce } from "../lib/debounce";
 import { loadQuiz, saveQuiz } from "../lib/storage";
 
 // Configure a single Redux store for the app
@@ -13,11 +14,16 @@ if (persisted) {
   store.dispatch(hydrate(persisted));
 }
 
-// Lightweight auto-save to localStorage whenever state changes
-store.subscribe(() => {
+// Debounced auto-save to localStorage to reduce I/O overhead
+// Waits 500ms after the last state change before saving
+const debouncedSave = debounce(() => {
   const state = store.getState();
   const payload = { questions: state.quiz.questions };
   saveQuiz(payload);
+}, 500);
+
+store.subscribe(() => {
+  debouncedSave();
 });
 
 // Typed helpers for selectors and dispatch
