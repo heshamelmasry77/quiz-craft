@@ -42,6 +42,11 @@ export default function PreviewPage() {
                     <li key={o.id} className="flex items-center gap-2">
                       <input
                         type={q.type === "single" ? "radio" : "checkbox"}
+                        name={
+                          q.type === "single"
+                            ? `question-${q.id}`
+                            : `question-${q.id}-option-${o.id}`
+                        }
                         disabled
                         aria-hidden="true"
                       />
