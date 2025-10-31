@@ -25,17 +25,49 @@ function hasStorage() {
   }
 }
 
-export function loadQuiz(): QuizState | null {
-  if (!hasStorage()) return null;
+/**
+ * Attempts to safely load the quiz state from the browser's localStorage.
+ *
+ * Returns an object with two properties:
+ *   - `data`: The parsed QuizState if successfully loaded, or `null` if nothing is saved.
+ *   - `error`: A human-readable message if the stored data is corrupt or cannot be parsed, or `null` if storage is unavailable or disabled.
+ *
+ * This function is intentionally defensive:
+ *   • It checks that `window.localStorage` is available before accessing it
+ *     (so it won't throw in non-browser environments).
+ *   • It wraps all access in try/catch to avoid runtime crashes caused by malformed JSON.
+ *   • It validates that the loaded object has a valid `questions` array
+ *     before treating it as a quiz.
+ *
+ * Example result scenarios:
+ *   { data: null, error: null }      → No quiz saved, or storage disabled.
+ *   { data: validQuiz, error: null } → Successfully restored a quiz.
+ *   { data: null, error: "Failed to read saved quiz (corrupt JSON)." } → JSON parse error.
+ */
+export function loadQuiz(): { data: QuizState | null; error: string | null } {
+  // Verify that localStorage is available (prevents issues in SSR or incognito)
+  if (!hasStorage()) return { data: null, error: null };
+
   try {
-    const raw = window.localStorage.getItem(KEY);
-    if (!raw) return null;
+    // Retrieve the saved quiz JSON string from localStorage
+    const raw = localStorage.getItem(KEY);
+
+    // If nothing was stored previously, there’s nothing to load
+    if (!raw) return { data: null, error: null };
+
+    // Attempt to parse the stored JSON back into a QuizState object
     const parsed = JSON.parse(raw) as QuizState;
-    // Very light shape check
-    if (!parsed || !Array.isArray(parsed.questions)) return null;
-    return parsed;
+
+    // Basic sanity check: ensure the parsed object looks like a quiz
+    if (!parsed || !Array.isArray(parsed.questions)) {
+      return { data: null, error: "Saved data is invalid." };
+    }
+
+    // Successfully loaded and verified quiz data
+    return { data: parsed, error: null };
   } catch {
-    return null;
+    // Catch parsing or access errors — prevents app crashes
+    return { data: null, error: "Failed to read saved quiz (corrupt JSON)." };
   }
 }
 

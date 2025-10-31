@@ -1,17 +1,27 @@
 import { configureStore } from "@reduxjs/toolkit";
-import quizReducer, { hydrate } from "./quizSlice";
+import quizReducer, { hydrate, hydrateError } from "./quizSlice";
+import loaderReducer, { showLoader, hideLoader } from "./loaderSlice";
 import { loadQuiz, saveQuiz } from "../lib/storage";
 
-// Configure a single Redux store for the app
 export const store = configureStore({
-  reducer: { quiz: quizReducer },
+  reducer: {
+    quiz: quizReducer,
+    loader: loaderReducer,
+  },
 });
 
-// Re-hydrate state from localStorage once on startup
-const persisted = loadQuiz();
-if (persisted) {
-  store.dispatch(hydrate(persisted));
+// Show loader during hydrate
+store.dispatch(showLoader("Loading saved quiz…"));
+
+const { data, error } = loadQuiz();
+if (error) {
+  store.dispatch(hydrateError(error));
+} else {
+  // Re-hydrate state from localStorage once on startup
+  store.dispatch(hydrate(data)); // data may be null: either nothing saved OR storage is disabled
 }
+
+store.dispatch(hideLoader());
 
 // Lightweight auto-save to localStorage whenever state changes
 store.subscribe(() => {

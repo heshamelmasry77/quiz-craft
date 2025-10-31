@@ -63,8 +63,10 @@ export default function BuilderPage() {
         <button
           className="px-3 py-2 border rounded cursor-pointer"
           onClick={() => {
-            dispatch(clearAll());
-            clearQuizStorage();
+            if (confirm("Are you sure you want to clear the whole quiz? This cannot be undone.")) {
+              dispatch(clearAll());
+              clearQuizStorage();
+            }
           }}
         >
           Clear quiz
