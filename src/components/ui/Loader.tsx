@@ -2,7 +2,6 @@ import { useAppSelector } from "../../store/hooks";
 
 export default function Loader() {
   const { isLoading, message } = useAppSelector((s) => s.loader);
-  console.log("Loader state:", isLoading, message);
 
   if (!isLoading) return null;
 
