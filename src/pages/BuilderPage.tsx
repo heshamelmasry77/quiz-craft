@@ -48,17 +48,20 @@ export default function BuilderPage() {
         <h1 className="text-xl font-semibold mr-auto">Accessible Quiz Builder</h1>
 
         <button
-          className="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200"
+          className="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
           onClick={onPreview}
         >
           Preview Quiz →
         </button>
 
-        <button className="px-3 py-2 border rounded" onClick={() => dispatch(undo())}>
+        <button
+          className="px-3 py-2 border rounded cursor-pointer"
+          onClick={() => dispatch(undo())}
+        >
           Undo
         </button>
         <button
-          className="px-3 py-2 border rounded"
+          className="px-3 py-2 border rounded cursor-pointer"
           onClick={() => {
             dispatch(clearAll());
             clearQuizStorage();
@@ -82,13 +85,16 @@ export default function BuilderPage() {
       )}
 
       <div className="flex gap-2">
-        <button className="px-3 py-2 border rounded" onClick={() => addQ("single")}>
+        <button className="px-3 py-2 border rounded cursor-pointer" onClick={() => addQ("single")}>
           + Single choice
         </button>
-        <button className="px-3 py-2 border rounded" onClick={() => addQ("multiple")}>
+        <button
+          className="px-3 py-2 border rounded cursor-pointer"
+          onClick={() => addQ("multiple")}
+        >
           + Multiple choice
         </button>
-        <button className="px-3 py-2 border rounded" onClick={() => addQ("short")}>
+        <button className="px-3 py-2 border rounded cursor-pointer" onClick={() => addQ("short")}>
           + Short text
         </button>
       </div>
@@ -122,7 +128,7 @@ export default function BuilderPage() {
                 </select>
 
                 <button
-                  className="ml-auto px-2 py-1 border rounded text-red-600"
+                  className="ml-auto px-2 py-1 border rounded text-red-600 cursor-pointer"
                   onClick={() => dispatch(removeQuestion(q.id))}
                 >
                   Remove
@@ -147,7 +153,7 @@ export default function BuilderPage() {
                   <div className="flex items-center justify-between">
                     <h3 className="font-medium">Options</h3>
                     <button
-                      className="px-2 py-1 border rounded"
+                      className="px-2 py-1 border rounded cursor-pointer"
                       onClick={() => dispatch(addOption({ questionId: q.id }))}
                     >
                       + Add option
@@ -180,12 +186,12 @@ export default function BuilderPage() {
                           }
                         />
                         <button
-                          className="px-2 py-1 border rounded"
-                          aria-label={`Remove option ${o.text || 'untitled'}`}
+                          className="px-2 py-1 border rounded text-red-600 cursor-pointer"
+                          aria-label={`Remove option ${o.text || "untitled"}`}
                           onClick={() =>
                             dispatch(removeOption({ questionId: q.id, optionId: o.id }))
                           }
-                          >
+                        >
                           Remove
                         </button>
                       </li>
