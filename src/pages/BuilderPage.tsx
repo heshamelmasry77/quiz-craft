@@ -75,7 +75,7 @@ export default function BuilderPage() {
 
       {/* Global validation banner */}
       {errors && errors.length > 0 && (
-        <div role="alert" className="border rounded p-3 bg-red-50 text-red-700">
+        <div role="alert" aria-live="polite" className="border rounded p-3 bg-red-50 text-red-700">
           <p className="font-medium mb-1">Please fix the highlighted issues before preview.</p>
           <ul className="list-disc pl-5 text-sm">
             {errors.slice(0, 5).map((e, idx) => (
