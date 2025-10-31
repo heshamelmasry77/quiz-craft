@@ -181,10 +181,11 @@ export default function BuilderPage() {
                         />
                         <button
                           className="px-2 py-1 border rounded"
+                          aria-label={`Remove option ${o.text || 'untitled'}`}
                           onClick={() =>
                             dispatch(removeOption({ questionId: q.id, optionId: o.id }))
                           }
-                        >
+                          >
                           Remove
                         </button>
                       </li>
