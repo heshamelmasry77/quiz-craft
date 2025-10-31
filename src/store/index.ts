@@ -21,7 +21,10 @@ if (error) {
   store.dispatch(hydrate(data)); // may be null → nothing saved
 }
 
-store.dispatch(hideLoader());
+// small delay before hiding loader (smooth UX)
+setTimeout(() => {
+  store.dispatch(hideLoader());
+}, 200);
 
 // Lightweight auto-save to localStorage whenever state changes
 store.subscribe(() => {
