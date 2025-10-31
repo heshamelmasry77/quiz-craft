@@ -151,11 +151,12 @@ export default function BuilderPage() {
               </label>
 
               {q.type !== "short" && (
-                <div className="mt-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium">Options</h3>
+                <fieldset className="mt-4">
+                  <legend className="font-medium">Options</legend>
+
+                  <div className="flex items-center justify-between mt-1">
                     <button
-                      className="px-2 py-1 border rounded cursor-pointer"
+                      className="ml-auto px-2 py-1 border rounded cursor-pointer"
                       onClick={() => dispatch(addOption({ questionId: q.id }))}
                     >
                       + Add option
@@ -168,11 +169,13 @@ export default function BuilderPage() {
                         <input
                           aria-label="Mark correct"
                           type={q.type === "single" ? "radio" : "checkbox"}
+                          name={q.type === "single" ? `q-${q.id}` : undefined}
                           checked={!!o.isCorrect}
                           onChange={() =>
                             dispatch(toggleOptionCorrect({ questionId: q.id, optionId: o.id }))
                           }
                         />
+
                         <input
                           aria-label="Option text"
                           className="flex-1 border rounded px-2 py-1"
@@ -187,6 +190,7 @@ export default function BuilderPage() {
                             )
                           }
                         />
+
                         <button
                           className="px-2 py-1 border rounded text-red-600 cursor-pointer"
                           aria-label={`Remove option ${o.text || "untitled"}`}
@@ -203,7 +207,7 @@ export default function BuilderPage() {
                   {optionsError && (
                     <p className="mt-2 text-xs text-red-600">{optionsError.message}</p>
                   )}
-                </div>
+                </fieldset>
               )}
             </li>
           );
