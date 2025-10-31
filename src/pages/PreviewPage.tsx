@@ -10,7 +10,7 @@ export default function PreviewPage() {
       <header className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-semibold">Quiz Preview</h1>
         <button
-          className="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
+          className="px-3 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer"
           onClick={() => navigate("/")}
         >
           ← Back to Builder
@@ -22,7 +22,7 @@ export default function PreviewPage() {
       ) : (
         <ol className="mt-4 space-y-4">
           {questions.map((q, i) => (
-            <li key={q.id} aria-label={`question-${i + 1}`} className="border rounded p-3">
+            <li key={q.id} aria-label={`question-${i + 1}`} className="border rounded-md p-3">
               <p className="font-medium">
                 {i + 1}. {q.title || <em className="text-gray-500">Untitled</em>}
               </p>
@@ -31,7 +31,7 @@ export default function PreviewPage() {
                 <div className="mt-2">
                   <label className="text-sm">Your answer</label>
                   <input
-                    className="mt-1 w-full border rounded px-2 py-2"
+                    className="mt-1 w-full border rounded-md px-2 py-2"
                     placeholder="Type your answer…"
                     readOnly
                   />
