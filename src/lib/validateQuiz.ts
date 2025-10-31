@@ -5,7 +5,7 @@ import { QuizSchema, type QuizValidationInput } from "../validation/quiz.schema"
  * - `path`: tells where the error happened (e.g. ["questions", 0, "title"])
  * - `message`: the human-readable explanation of the problem
  */
-export type FieldError = { path: (string | number)[]; message: string };
+export type FieldError = { path: PropertyKey[]; message: string };
 
 /**
  * The overall result of validating a quiz.

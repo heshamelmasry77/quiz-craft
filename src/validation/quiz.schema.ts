@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const OptionSchema = z.object({
   id: z.string(),
-  text: z.string().trim(), // text can be empty during editing; we validate at question level
+  text: z.string().trim().min(1, "Option text is required"), // text can be empty during editing; we validate at question level
   isCorrect: z.boolean(),
 });
 
@@ -32,7 +32,7 @@ export const QuestionSchema = z
         });
       }
     }
-    // For short text, we ignore options (can be empty)
+    // For short text, we ignore options
   });
 
 export const QuizSchema = z.object({
