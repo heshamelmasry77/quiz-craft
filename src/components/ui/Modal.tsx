@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { close } from "../../store/modalSlice";
 import { clearAll } from "../../store/quizSlice";
@@ -8,8 +9,6 @@ export default function Modal() {
   const { isOpen, title, message, confirmText, cancelText, action } = useAppSelector(
     (s) => s.modal,
   );
-
-  if (!isOpen) return null;
 
   const handleConfirm = () => {
     switch (action.type) {
@@ -26,15 +25,36 @@ export default function Modal() {
 
   const handleCancel = () => dispatch(close());
 
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        dispatch(close());
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [isOpen, dispatch]);
+
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+      onClick={handleCancel}
+    >
       <div
         className="bg-white rounded-xl shadow p-5 w-full max-w-md"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
+        onClick={(e) => e.stopPropagation()}
       >
-        <h2 id="modal-title" className="text-lg font-semibold">{title}</h2>
+        <h2 id="modal-title" className="text-lg font-semibold">
+          {title}
+        </h2>
         <p className="mt-2 text-sm text-gray-700">{message}</p>
         <div className="mt-4 flex justify-end gap-2">
           <button className="px-3 py-2 border rounded-md cursor-pointer" onClick={handleCancel}>
