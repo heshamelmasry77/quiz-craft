@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { openConfirm } from "../store/modalSlice";
 import {
   addQuestion,
   removeQuestion,
-  clearAll,
   undo,
   setQuestionType,
   updateQuestionTitle,
@@ -14,7 +14,6 @@ import {
   toggleOptionCorrect,
 } from "../store/quizSlice";
 import type { QuestionType } from "../types/quiz";
-import { clearQuizStorage } from "../lib/storage";
 import { validateQuiz, type FieldError } from "../lib/validateQuiz";
 
 export default function BuilderPage() {
@@ -48,25 +47,30 @@ export default function BuilderPage() {
         <h1 className="text-xl font-semibold mr-auto">Accessible Quiz Builder</h1>
 
         <button
-          className="px-3 py-2 border rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
+          className="px-3 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer"
           onClick={onPreview}
         >
           Preview Quiz →
         </button>
 
         <button
-          className="px-3 py-2 border rounded cursor-pointer"
+          className="px-3 py-2 border rounded-md cursor-pointer"
           onClick={() => dispatch(undo())}
         >
           Undo
         </button>
         <button
-          className="px-3 py-2 border rounded cursor-pointer"
+          className="px-3 py-2 border rounded-md cursor-pointer"
           onClick={() => {
-            if (confirm("Are you sure you want to clear the whole quiz? This cannot be undone.")) {
-              dispatch(clearAll());
-              clearQuizStorage();
-            }
+            dispatch(
+              openConfirm({
+                title: "Clear quiz?",
+                message: "Are you sure you want to clear the whole quiz? This cannot be undone.",
+                confirmText: "Clear quiz",
+                cancelText: "Cancel",
+                action: { type: "clear-quiz" },
+              }),
+            );
           }}
         >
           Clear quiz
@@ -75,7 +79,11 @@ export default function BuilderPage() {
 
       {/* Global validation banner */}
       {errors && errors.length > 0 && (
-        <div role="alert" className="border rounded p-3 bg-red-50 text-red-700">
+        <div
+          role="alert"
+          aria-live="polite"
+          className="border rounded-md p-3 bg-red-50 text-red-700"
+        >
           <p className="font-medium mb-1">Please fix the highlighted issues before preview.</p>
           <ul className="list-disc pl-5 text-sm">
             {errors.slice(0, 5).map((e, idx) => (
@@ -87,16 +95,22 @@ export default function BuilderPage() {
       )}
 
       <div className="flex gap-2">
-        <button className="px-3 py-2 border rounded cursor-pointer" onClick={() => addQ("single")}>
+        <button
+          className="px-3 py-2 border rounded-md cursor-pointer"
+          onClick={() => addQ("single")}
+        >
           + Single choice
         </button>
         <button
-          className="px-3 py-2 border rounded cursor-pointer"
+          className="px-3 py-2 border rounded-md cursor-pointer"
           onClick={() => addQ("multiple")}
         >
           + Multiple choice
         </button>
-        <button className="px-3 py-2 border rounded cursor-pointer" onClick={() => addQ("short")}>
+        <button
+          className="px-3 py-2 border rounded-md cursor-pointer"
+          onClick={() => addQ("short")}
+        >
           + Short text
         </button>
       </div>
@@ -112,13 +126,13 @@ export default function BuilderPage() {
           const optionsError = qErrs.find((e) => e.path.includes("options"));
 
           return (
-            <li key={q.id} className="border rounded p-4">
+            <li key={q.id} className="border rounded-md p-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">Q{idx + 1}</span>
 
                 <select
                   aria-label="Question type"
-                  className="border rounded px-2 py-1"
+                  className="border rounded-md px-2 py-1"
                   value={q.type}
                   onChange={(e) =>
                     dispatch(setQuestionType({ id: q.id, type: e.target.value as QuestionType }))
@@ -130,7 +144,7 @@ export default function BuilderPage() {
                 </select>
 
                 <button
-                  className="ml-auto px-2 py-1 border rounded text-red-600 cursor-pointer"
+                  className="ml-auto px-2 py-1 border rounded-md text-red-600 cursor-pointer"
                   onClick={() => dispatch(removeQuestion(q.id))}
                 >
                   Remove
@@ -140,7 +154,7 @@ export default function BuilderPage() {
               <label className="block mt-3 text-sm">
                 Question title
                 <input
-                  className={`mt-1 w-full border rounded px-2 py-2 ${titleError ? "border-red-500" : ""}`}
+                  className={`mt-1 w-full border rounded-md px-2 py-2 ${titleError ? "border-red-500" : ""}`}
                   aria-invalid={!!titleError}
                   value={q.title}
                   onChange={(e) =>
@@ -151,11 +165,12 @@ export default function BuilderPage() {
               </label>
 
               {q.type !== "short" && (
-                <div className="mt-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium">Options</h3>
+                <fieldset className="mt-4">
+                  <legend className="font-medium">Options</legend>
+
+                  <div className="flex items-center justify-between mt-1">
                     <button
-                      className="px-2 py-1 border rounded cursor-pointer"
+                      className="ml-auto px-2 py-1 border rounded-md cursor-pointer"
                       onClick={() => dispatch(addOption({ questionId: q.id }))}
                     >
                       + Add option
@@ -168,14 +183,16 @@ export default function BuilderPage() {
                         <input
                           aria-label="Mark correct"
                           type={q.type === "single" ? "radio" : "checkbox"}
+                          name={q.type === "single" ? `q-${q.id}` : undefined}
                           checked={!!o.isCorrect}
                           onChange={() =>
                             dispatch(toggleOptionCorrect({ questionId: q.id, optionId: o.id }))
                           }
                         />
+
                         <input
                           aria-label="Option text"
-                          className="flex-1 border rounded px-2 py-1"
+                          className="flex-1 border rounded-md px-2 py-1"
                           value={o.text}
                           onChange={(e) =>
                             dispatch(
@@ -187,8 +204,9 @@ export default function BuilderPage() {
                             )
                           }
                         />
+
                         <button
-                          className="px-2 py-1 border rounded text-red-600 cursor-pointer"
+                          className="px-2 py-1 border rounded-md text-red-600 cursor-pointer"
                           aria-label={`Remove option ${o.text || "untitled"}`}
                           onClick={() =>
                             dispatch(removeOption({ questionId: q.id, optionId: o.id }))
@@ -203,7 +221,7 @@ export default function BuilderPage() {
                   {optionsError && (
                     <p className="mt-2 text-xs text-red-600">{optionsError.message}</p>
                   )}
-                </div>
+                </fieldset>
               )}
             </li>
           );

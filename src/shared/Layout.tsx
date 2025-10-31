@@ -1,13 +1,16 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import Loader from "../components/ui/Loader";
+import Modal from "../components/ui/Modal";
 
 export default function Layout() {
   const link = "px-3 py-2 rounded hover:bg-gray-100";
   const active = "bg-gray-200";
+
   return (
     <div className="min-h-screen">
       {/* Global loader overlay */}
       <Loader />
+      <Modal />
 
       <header className="border-b">
         <nav className="max-w-5xl mx-auto flex items-center gap-2 p-3">

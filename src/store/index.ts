@@ -1,12 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import quizReducer, { hydrate, hydrateError } from "./quizSlice";
 import loaderReducer, { showLoader, hideLoader } from "./loaderSlice";
+import modalReducer from "./modalSlice";
+
 import { loadQuiz, saveQuiz } from "../lib/storage";
 
 export const store = configureStore({
   reducer: {
     quiz: quizReducer,
     loader: loaderReducer,
+    modal: modalReducer,
   },
 });
 
