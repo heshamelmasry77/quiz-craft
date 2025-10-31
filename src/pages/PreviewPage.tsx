@@ -29,8 +29,11 @@ export default function PreviewPage() {
 
               {q.type === "short" ? (
                 <div className="mt-2">
-                  <label className="text-sm">Your answer</label>
+                  <label htmlFor={`answer-${q.id}`} className="text-sm">
+                    Your answer
+                  </label>
                   <input
+                    id={`answer-${q.id}`}
                     className="mt-1 w-full border rounded px-2 py-2"
                     placeholder="Type your answer…"
                     readOnly
