@@ -28,8 +28,13 @@ export default function Modal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow p-5 w-full max-w-md">
-        <h2 className="text-lg font-semibold">{title}</h2>
+      <div
+        className="bg-white rounded-xl shadow p-5 w-full max-w-md"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <h2 id="modal-title" className="text-lg font-semibold">{title}</h2>
         <p className="mt-2 text-sm text-gray-700">{message}</p>
         <div className="mt-4 flex justify-end gap-2">
           <button className="px-3 py-2 border rounded-md cursor-pointer" onClick={handleCancel}>
