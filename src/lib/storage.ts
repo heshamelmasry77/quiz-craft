@@ -30,7 +30,7 @@ function hasStorage() {
  *
  * Returns an object with two properties:
  *   - `data`: The parsed QuizState if successfully loaded, or `null` if nothing is saved.
- *   - `error`: A human-readable message if the stored data is corrupt or cannot be parsed.
+ *   - `error`: A human-readable message if the stored data is corrupt or cannot be parsed, or `null` if storage is unavailable or disabled.
  *
  * This function is intentionally defensive:
  *   • It checks that `window.localStorage` is available before accessing it

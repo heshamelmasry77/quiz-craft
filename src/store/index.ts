@@ -18,7 +18,7 @@ if (error) {
   store.dispatch(hydrateError(error));
 } else {
   // Re-hydrate state from localStorage once on startup
-  store.dispatch(hydrate(data)); // may be null → nothing saved
+  store.dispatch(hydrate(data)); // data may be null: either nothing saved OR storage is disabled
 }
 
 store.dispatch(hideLoader());

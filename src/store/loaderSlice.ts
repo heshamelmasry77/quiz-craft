@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type LoaderState = {
   isLoading: boolean;
-  message?: string | null;
+  message: string | null;
 };
 
 const initialState: LoaderState = {
