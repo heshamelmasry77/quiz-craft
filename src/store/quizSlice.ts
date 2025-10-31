@@ -16,9 +16,11 @@ const newQuestion = (type: QuestionType = "single"): Question => ({
   options: type === "short" ? [] : blankOptions(),
 });
 
-type QuizStoreState = QuizState & { history: QuizState[] };
-
-const initialState: QuizStoreState = { questions: [], history: [] };
+type QuizStoreState = QuizState & {
+  history: QuizState[];
+  hydrateError: string | null;
+};
+const initialState: QuizStoreState = { questions: [], history: [], hydrateError: null };
 
 function pushHistory(state: QuizStoreState) {
   state.history.push({ questions: JSON.parse(JSON.stringify(state.questions)) });
@@ -114,6 +116,11 @@ const quizSlice = createSlice({
 
       // Reset undo stack since this is a new session
       state.history = [];
+      state.hydrateError = null; // clear any previous error
+    },
+    // store-level error message for failed hydrate
+    hydrateError(state, action: PayloadAction<string>) {
+      state.hydrateError = action.payload;
     },
   },
 });
@@ -130,6 +137,7 @@ export const {
   toggleOptionCorrect,
   undo,
   hydrate,
+  hydrateError,
 } = quizSlice.actions;
 
 export default quizSlice.reducer;
