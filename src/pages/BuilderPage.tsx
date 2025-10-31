@@ -177,46 +177,51 @@ export default function BuilderPage() {
                     </button>
                   </div>
 
-                  <ul className="mt-2 space-y-2">
-                    {q.options.map((o) => (
-                      <li key={o.id} className="flex items-center gap-2">
-                        <input
-                          aria-label="Mark correct"
-                          type={q.type === "single" ? "radio" : "checkbox"}
-                          name={q.type === "single" ? `q-${q.id}` : undefined}
-                          checked={!!o.isCorrect}
-                          onChange={() =>
-                            dispatch(toggleOptionCorrect({ questionId: q.id, optionId: o.id }))
-                          }
-                        />
+                  <fieldset className="mt-2">
+                    <legend className="sr-only">
+                      {q.type === "single" ? "Select correct answer" : "Select correct answers"}
+                    </legend>
+                    <ul className="space-y-2">
+                      {q.options.map((o) => (
+                        <li key={o.id} className="flex items-center gap-2">
+                          <input
+                            aria-label="Mark correct"
+                            type={q.type === "single" ? "radio" : "checkbox"}
+                            name={q.type === "single" ? `q-${q.id}` : undefined}
+                            checked={!!o.isCorrect}
+                            onChange={() =>
+                              dispatch(toggleOptionCorrect({ questionId: q.id, optionId: o.id }))
+                            }
+                          />
 
-                        <input
-                          aria-label="Option text"
-                          className="flex-1 border rounded-md px-2 py-1"
-                          value={o.text}
-                          onChange={(e) =>
-                            dispatch(
-                              updateOptionText({
-                                questionId: q.id,
-                                optionId: o.id,
-                                text: e.target.value,
-                              }),
-                            )
-                          }
-                        />
+                          <input
+                            aria-label="Option text"
+                            className="flex-1 border rounded-md px-2 py-1"
+                            value={o.text}
+                            onChange={(e) =>
+                              dispatch(
+                                updateOptionText({
+                                  questionId: q.id,
+                                  optionId: o.id,
+                                  text: e.target.value,
+                                }),
+                              )
+                            }
+                          />
 
-                        <button
-                          className="px-2 py-1 border rounded-md text-red-600 cursor-pointer"
-                          aria-label={`Remove option ${o.text || "untitled"}`}
-                          onClick={() =>
-                            dispatch(removeOption({ questionId: q.id, optionId: o.id }))
-                          }
-                        >
-                          Remove
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                          <button
+                            className="px-2 py-1 border rounded-md text-red-600 cursor-pointer"
+                            aria-label={`Remove option ${o.text || "untitled"}`}
+                            onClick={() =>
+                              dispatch(removeOption({ questionId: q.id, optionId: o.id }))
+                            }
+                          >
+                            Remove
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </fieldset>
 
                   {optionsError && (
                     <p className="mt-2 text-xs text-red-600">{optionsError.message}</p>
