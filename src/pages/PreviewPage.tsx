@@ -20,7 +20,7 @@ export default function PreviewPage() {
       {questions.length === 0 ? (
         <p className="text-gray-600 mt-2">No questions available.</p>
       ) : (
-        <ol className="mt-4 space-y-4">
+        <ol data-testid="preview-list" className="mt-4 space-y-4">
           {questions.map((q, i) => (
             <li key={q.id} aria-label={`question-${i + 1}`} className="border rounded-md p-3">
               <p className="font-medium">
