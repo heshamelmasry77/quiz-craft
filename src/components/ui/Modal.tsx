@@ -34,7 +34,9 @@ export default function Modal() {
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <h2 id="modal-title" className="text-lg font-semibold">{title}</h2>
+        <h2 id="modal-title" className="text-lg font-semibold">
+          {title}
+        </h2>
         <p className="mt-2 text-sm text-gray-700">{message}</p>
         <div className="mt-4 flex justify-end gap-2">
           <button className="px-3 py-2 border rounded-md cursor-pointer" onClick={handleCancel}>
