@@ -1,45 +1,45 @@
 import { useAppSelector } from "../store/hooks";
 import { useNavigate } from "react-router-dom";
+import Button from "../components/ui/Button";
 
 export default function PreviewPage() {
   const navigate = useNavigate();
   const questions = useAppSelector((s) => s.quiz.questions);
 
   return (
-    <section aria-label="Student preview">
-      <header className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold">Quiz Preview</h1>
-        <button
-          className="px-3 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer"
-          onClick={() => navigate("/")}
-        >
-          ← Back to Builder
-        </button>
+    <section aria-label="Student preview" className="space-y-5">
+      <header className="flex flex-wrap gap-2 items-center">
+        <h1 className="text-2xl font-semibold mr-auto">Quiz Preview</h1>
+        <Button onClick={() => navigate("/")}>← Back to Builder</Button>
       </header>
 
       {questions.length === 0 ? (
-        <p className="text-gray-600 mt-2">No questions available.</p>
+        <p className="text-gray-600">No questions available.</p>
       ) : (
-        <ol data-testid="preview-list" className="mt-4 space-y-4">
+        <ol data-testid="preview-list" className="space-y-6">
           {questions.map((q, i) => (
-            <li key={q.id} aria-label={`question-${i + 1}`} className="border rounded-md p-3">
+            <li
+              key={q.id}
+              aria-label={`question-${i + 1}`}
+              className="border rounded-lg p-5 bg-white shadow-sm transition-shadow hover:shadow"
+            >
               <p className="font-medium">
                 {i + 1}. {q.title || <em className="text-gray-500">Untitled</em>}
               </p>
 
               {q.type === "short" ? (
-                <div className="mt-2">
+                <div className="mt-3">
                   <label className="text-sm">Your answer</label>
                   <input
-                    className="mt-1 w-full border rounded-md px-2 py-2"
+                    className="mt-1 w-full border rounded-md px-3 py-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Type your answer…"
                     readOnly
                   />
                 </div>
               ) : (
-                <ul className="mt-2 space-y-1">
+                <ul className="mt-3 space-y-2">
                   {q.options.map((o) => (
-                    <li key={o.id} className="flex items-center gap-2">
+                    <li key={o.id} className="flex items-center gap-3">
                       <input
                         type={q.type === "single" ? "radio" : "checkbox"}
                         name={
@@ -49,6 +49,7 @@ export default function PreviewPage() {
                         }
                         disabled
                         aria-hidden="true"
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                       <span>{o.text || <em className="text-gray-500">Empty option</em>}</span>
                     </li>

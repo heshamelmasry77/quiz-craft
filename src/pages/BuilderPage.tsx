@@ -15,6 +15,7 @@ import {
 } from "../store/quizSlice";
 import type { QuestionType } from "../types/quiz";
 import { validateQuiz, type FieldError } from "../lib/validateQuiz";
+import Button from "../components/ui/Button";
 
 export default function BuilderPage() {
   const dispatch = useAppDispatch();
@@ -31,7 +32,6 @@ export default function BuilderPage() {
       navigate("/preview");
     } else {
       setErrors(result.errors);
-      // scroll to top:
       document.getElementById("builder-top")?.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -42,28 +42,18 @@ export default function BuilderPage() {
     );
 
   return (
-    <section id="builder-top" className="space-y-4">
+    <section id="builder-top" className="space-y-5">
       <header className="flex flex-wrap gap-2 items-center">
-        <h1 className="text-xl font-semibold mr-auto">Accessible Quiz Builder</h1>
+        <h1 className="text-2xl font-semibold mr-auto">Accessible Quiz Builder</h1>
 
-        <button
-          data-testid="preview"
-          className="px-3 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer"
-          onClick={onPreview}
-        >
+        <Button data-testid="preview" variant="primary" onClick={onPreview}>
           Preview Quiz →
-        </button>
-
-        <button
-          className="px-3 py-2 border rounded-md cursor-pointer"
-          onClick={() => dispatch(undo())}
-        >
-          Undo
-        </button>
-        <button
+        </Button>
+        <Button onClick={() => dispatch(undo())}>Undo</Button>
+        <Button
           data-testid="clear-quiz"
-          className="px-3 py-2 border rounded-md cursor-pointer"
-          onClick={() => {
+          variant="danger"
+          onClick={() =>
             dispatch(
               openConfirm({
                 title: "Clear quiz?",
@@ -72,22 +62,21 @@ export default function BuilderPage() {
                 cancelText: "Cancel",
                 action: { type: "clear-quiz" },
               }),
-            );
-          }}
+            )
+          }
         >
           Clear quiz
-        </button>
+        </Button>
       </header>
 
-      {/* Global validation banner */}
       {errors && errors.length > 0 && (
         <div
           role="alert"
           aria-live="polite"
-          className="border rounded-md p-3 bg-red-50 text-red-700"
+          className="border border-red-200 rounded-md p-4 bg-red-50 text-red-700"
         >
-          <p className="font-medium mb-1">Please fix the highlighted issues before preview.</p>
-          <ul className="list-disc pl-5 text-sm">
+          <p className="font-medium mb-2">Please fix the highlighted issues before preview.</p>
+          <ul className="list-disc pl-5 text-sm space-y-1">
             {errors.slice(0, 5).map((e, idx) => (
               <li key={idx}>{e.message}</li>
             ))}
@@ -96,28 +85,16 @@ export default function BuilderPage() {
         </div>
       )}
 
-      <div className="flex gap-2">
-        <button
-          data-testid="add-single"
-          className="px-3 py-2 border rounded-md cursor-pointer"
-          onClick={() => addQ("single")}
-        >
+      <div className="flex flex-wrap gap-2">
+        <Button data-testid="add-single" onClick={() => addQ("single")}>
           + Single choice
-        </button>
-        <button
-          data-testid="add-multiple"
-          className="px-3 py-2 border rounded-md cursor-pointer"
-          onClick={() => addQ("multiple")}
-        >
+        </Button>
+        <Button data-testid="add-multiple" onClick={() => addQ("multiple")}>
           + Multiple choice
-        </button>
-        <button
-          data-testid="add-short"
-          className="px-3 py-2 border rounded-md cursor-pointer"
-          onClick={() => addQ("short")}
-        >
+        </Button>
+        <Button data-testid="add-short" onClick={() => addQ("short")}>
           + Short text
-        </button>
+        </Button>
       </div>
 
       {questions.length === 0 && (
@@ -131,13 +108,22 @@ export default function BuilderPage() {
           const optionsError = qErrs.find((e) => e.path.includes("options"));
 
           return (
-            <li key={q.id} className="border rounded-md p-4">
-              <div className="flex items-center gap-2">
+            <li
+              key={q.id}
+              className="border rounded-lg p-5 bg-white shadow-sm transition-shadow hover:shadow"
+            >
+              <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-500">Q{idx + 1}</span>
 
+                {/* Question type dropdown */}
+                <label htmlFor={`type-${q.id}`} className="sr-only">
+                  Question type
+                </label>
                 <select
+                  id={`type-${q.id}`}
+                  name={`type-${q.id}`}
                   aria-label="Question type"
-                  className="border rounded-md px-2 py-1"
+                  className="h-[38px] border rounded-md px-3 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={q.type}
                   onChange={(e) =>
                     dispatch(setQuestionType({ id: q.id, type: e.target.value as QuestionType }))
@@ -148,43 +134,51 @@ export default function BuilderPage() {
                   <option value="short">Short text</option>
                 </select>
 
-                <button
-                  className="ml-auto px-2 py-1 border rounded-md text-red-600 cursor-pointer"
+                <Button
+                  variant="danger"
+                  size="sm"
+                  className="ml-auto"
                   onClick={() => dispatch(removeQuestion(q.id))}
                 >
                   Remove
-                </button>
+                </Button>
               </div>
 
-              <label className="block mt-3 text-sm">
+              {/* Question title input */}
+              <label htmlFor={`title-${q.id}`} className="block mt-4 text-sm text-gray-700">
                 Question title
-                <input
-                  className={`mt-1 w-full border rounded-md px-2 py-2 ${titleError ? "border-red-500" : ""}`}
-                  aria-invalid={!!titleError}
-                  value={q.title}
-                  onChange={(e) =>
-                    dispatch(updateQuestionTitle({ id: q.id, title: e.target.value }))
-                  }
-                />
-                {titleError && <p className="mt-1 text-xs text-red-600">{titleError.message}</p>}
               </label>
+              <input
+                id={`title-${q.id}`}
+                name={`title-${q.id}`}
+                placeholder="Enter your question here..."
+                className={`h-[38px] mt-1 border rounded-md px-3 w-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  titleError ? "border-red-500" : "border-gray-300"
+                }`}
+                aria-invalid={!!titleError}
+                value={q.title}
+                onChange={(e) => dispatch(updateQuestionTitle({ id: q.id, title: e.target.value }))}
+              />
+              {titleError && <p className="mt-1 text-xs text-red-600">{titleError.message}</p>}
 
+              {/* Options */}
               {q.type !== "short" && (
-                <fieldset className="mt-4">
-                  <legend className="font-medium">Options</legend>
+                <fieldset className="mt-5">
+                  <legend className="font-medium text-gray-900">Options</legend>
 
-                  <div className="flex items-center justify-between mt-1">
-                    <button
-                      className="ml-auto px-2 py-1 border rounded-md cursor-pointer"
+                  <div className="flex items-center justify-between mt-2">
+                    <div />
+                    <Button
+                      variant="neutral"
                       onClick={() => dispatch(addOption({ questionId: q.id }))}
                     >
                       + Add option
-                    </button>
+                    </Button>
                   </div>
 
-                  <ul className="mt-2 space-y-2">
+                  <ul className="mt-3 space-y-2">
                     {q.options.map((o) => (
-                      <li key={o.id} className="flex items-center gap-2">
+                      <li key={o.id} className="flex items-center gap-3">
                         <input
                           aria-label="Mark correct"
                           type={q.type === "single" ? "radio" : "checkbox"}
@@ -193,11 +187,16 @@ export default function BuilderPage() {
                           onChange={() =>
                             dispatch(toggleOptionCorrect({ questionId: q.id, optionId: o.id }))
                           }
+                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
 
+                        {/* Option text input */}
                         <input
                           aria-label="Option text"
-                          className="flex-1 border rounded-md px-2 py-1"
+                          id={`option-${q.id}-${o.id}`}
+                          name={`option-${q.id}-${o.id}`}
+                          placeholder="Type option text..."
+                          className="h-[38px] flex-1 border border-gray-300 rounded-md px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                           value={o.text}
                           onChange={(e) =>
                             dispatch(
@@ -209,16 +208,16 @@ export default function BuilderPage() {
                             )
                           }
                         />
-
-                        <button
-                          className="px-2 py-1 border rounded-md text-red-600 cursor-pointer"
+                        <Button
+                          variant="danger"
+                          size="sm"
                           aria-label={`Remove option ${o.text || "untitled"}`}
                           onClick={() =>
                             dispatch(removeOption({ questionId: q.id, optionId: o.id }))
                           }
                         >
                           Remove
-                        </button>
+                        </Button>
                       </li>
                     ))}
                   </ul>

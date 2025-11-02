@@ -3,30 +3,48 @@ import Loader from "../components/ui/Loader";
 import Modal from "../components/ui/Modal";
 
 export default function Layout() {
-  const link = "px-3 py-2 rounded hover:bg-gray-100";
-  const active = "bg-gray-200";
+  const baseLink = "px-4 py-2 text-sm font-medium rounded-md transition-colors duration-150";
+  const inactive = "text-gray-600 hover:text-gray-900 hover:bg-gray-100";
+  const active = "bg-blue-100 text-blue-700 font-semibold";
 
   return (
-    <div className="min-h-screen">
-      {/* Global loader overlay */}
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      {/* Global overlays */}
       <Loader />
       <Modal />
 
-      <header className="border-b">
-        <nav className="max-w-5xl mx-auto flex items-center gap-2 p-3">
-          <Link to="/" className="font-semibold">
+      {/* Header */}
+      <header className="bg-white border-b shadow-sm">
+        <nav className="max-w-6xl mx-auto flex items-center justify-between p-4">
+          {/* Left side: Brand */}
+          <Link
+            to="/"
+            className="text-xl font-bold tracking-tight text-blue-600 hover:text-blue-700"
+          >
             QuizCraft
           </Link>
-          <NavLink to="/" end className={({ isActive }) => `${link} ${isActive ? active : ""}`}>
-            Builder
-          </NavLink>
-          <NavLink to="/preview" className={({ isActive }) => `${link} ${isActive ? active : ""}`}>
-            Preview
-          </NavLink>
+
+          {/* Center: Navigation */}
+          <div className="flex items-center gap-2">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) => `${baseLink} ${isActive ? active : inactive}`}
+            >
+              Builder
+            </NavLink>
+            <NavLink
+              to="/preview"
+              className={({ isActive }) => `${baseLink} ${isActive ? active : inactive}`}
+            >
+              Preview
+            </NavLink>
+          </div>
         </nav>
       </header>
 
-      <main className="max-w-5xl mx-auto p-4">
+      {/* Main content */}
+      <main className="max-w-6xl mx-auto p-6">
         <Outlet />
       </main>
     </div>
