@@ -18,7 +18,7 @@
     "e2e:headed": "playwright test --headed",
     "e2e:slow": "playwright test --headed --slow-mo=300",
     "e2e:ui": "playwright test --ui",
-    "postinstall": "npx playwright install --with-deps"
+    "e2e:browsers": "playwright install"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
