@@ -12,7 +12,6 @@ test("preview is blocked by validation until errors are fixed", async ({ page })
 
   // Get all error checks from the alert banner to avoid strict-mode collisions
   const banner = page.getByRole("alert");
-  console.log(await banner.innerHTML());
   await expect(banner.getByText("Title is required")).toBeVisible();
   await expect(banner.getByText("Option text is required")).toHaveCount(2);
   await expect(banner.getByText("Mark at least one option as correct")).toBeVisible();
