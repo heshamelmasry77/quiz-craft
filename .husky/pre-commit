@@ -1,4 +1,8 @@
 #!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Make sure local bins & Homebrew bins are available for GUI apps (SourceTree)
+export PATH="$PWD/node_modules/.bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 echo "🔍 Running lint-staged..."
-npx lint-staged
+lint-staged

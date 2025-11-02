@@ -61,6 +61,7 @@ export default function BuilderPage() {
           Undo
         </button>
         <button
+          data-testid="clear-quiz"
           className="px-3 py-2 border rounded-md cursor-pointer"
           onClick={() => {
             dispatch(
