@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Make sure node/npm/yarn are visible when SourceTree runs hooks
+export PATH="$PWD/node_modules/.bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 echo "🔍 Running lint-staged..."
-npx lint-staged
+lint-staged
