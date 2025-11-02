@@ -10,7 +10,7 @@ test("preview is blocked by validation until errors are fixed", async ({ page })
   await page.getByTestId("preview").click();
   await expect(page.getByRole("heading", { name: "Accessible Quiz Builder" })).toBeVisible();
 
-  // // Get all error checks to the alert banner to avoid strict-mode collisions
+  // Get all error checks from the alert banner to avoid strict-mode collisions
   const banner = page.getByRole("alert");
   console.log(await banner.innerHTML());
   await expect(banner.getByText("Title is required")).toBeVisible();
