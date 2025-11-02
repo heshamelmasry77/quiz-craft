@@ -16,6 +16,7 @@ import {
 import type { QuestionType } from "../types/quiz";
 import { validateQuiz, type FieldError } from "../lib/validateQuiz";
 import Button from "../components/ui/Button";
+import PageHeader from "../components/ui/PageHeader";
 
 export default function BuilderPage() {
   const dispatch = useAppDispatch();
@@ -43,31 +44,37 @@ export default function BuilderPage() {
 
   return (
     <section id="builder-top" className="space-y-5">
-      <header className="flex flex-wrap gap-2 items-center">
-        <h1 className="text-2xl font-semibold mr-auto">Accessible Quiz Builder</h1>
-
-        <Button data-testid="preview" variant="primary" onClick={onPreview}>
-          Preview Quiz →
-        </Button>
-        <Button onClick={() => dispatch(undo())}>Undo</Button>
-        <Button
-          data-testid="clear-quiz"
-          variant="danger"
-          onClick={() =>
-            dispatch(
-              openConfirm({
-                title: "Clear quiz?",
-                message: "Are you sure you want to clear the whole quiz? This cannot be undone.",
-                confirmText: "Clear quiz",
-                cancelText: "Cancel",
-                action: { type: "clear-quiz" },
-              }),
-            )
-          }
-        >
-          Clear quiz
-        </Button>
-      </header>
+      <PageHeader
+        title="Accessible Quiz Builder"
+        actions={
+          <>
+            <Button variant="primary" onClick={onPreview} data-testid="preview">
+              Preview Quiz →
+            </Button>
+            <Button variant="neutral" onClick={() => dispatch(undo())}>
+              Undo
+            </Button>
+            <Button
+              variant="danger"
+              data-testid="clear-quiz"
+              onClick={() =>
+                dispatch(
+                  openConfirm({
+                    title: "Clear quiz?",
+                    message:
+                      "Are you sure you want to clear the whole quiz? This cannot be undone.",
+                    confirmText: "Clear quiz",
+                    cancelText: "Cancel",
+                    action: { type: "clear-quiz" },
+                  }),
+                )
+              }
+            >
+              Clear quiz
+            </Button>
+          </>
+        }
+      />
 
       {errors && errors.length > 0 && (
         <div

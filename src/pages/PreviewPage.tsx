@@ -1,6 +1,7 @@
 import { useAppSelector } from "../store/hooks";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button";
+import PageHeader from "../components/ui/PageHeader";
 
 export default function PreviewPage() {
   const navigate = useNavigate();
@@ -8,10 +9,14 @@ export default function PreviewPage() {
 
   return (
     <section aria-label="Student preview" className="space-y-5">
-      <header className="flex flex-wrap gap-2 items-center">
-        <h1 className="text-2xl font-semibold mr-auto">Quiz Preview</h1>
-        <Button onClick={() => navigate("/")}>← Back to Builder</Button>
-      </header>
+      <PageHeader
+        title="Quiz Preview"
+        actions={
+          <Button variant="neutral" onClick={() => navigate("/")}>
+            ← Back to Builder
+          </Button>
+        }
+      />
 
       {questions.length === 0 ? (
         <p className="text-gray-600">No questions available.</p>

@@ -1,19 +1,30 @@
 import { Link } from "react-router-dom";
+import Button from "../components/ui/Button";
+import PageHeader from "../components/ui/PageHeader";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
-      <h1 className="text-4xl font-bold text-gray-800 mb-2">404</h1>
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">Page not found</h2>
-      <p className="text-gray-500 mb-6 max-w-md">
-        Sorry, the page you’re looking for doesn’t exist or may have been moved.
-      </p>
-      <Link
-        to="/"
-        className="inline-block px-5 py-2.5 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 transition-colors"
-      >
-        Go back home
-      </Link>
-    </div>
+    <section className="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
+      {/* Page header */}
+      <PageHeader
+        title="Page not found"
+        subtitle="Sorry, we couldn’t find the page you’re looking for."
+      />
+
+      {/* Main 404 message */}
+      <div className="mt-6">
+        <h1 className="text-6xl font-bold text-gray-900 mb-3">404</h1>
+        <p className="text-gray-600 max-w-md mx-auto mb-8">
+          The page you’re looking for doesn’t exist or may have been moved.
+        </p>
+
+        {/* Action */}
+        <Link to="/">
+          <Button variant="primary" size="md">
+            Go back home
+          </Button>
+        </Link>
+      </div>
+    </section>
   );
 }
