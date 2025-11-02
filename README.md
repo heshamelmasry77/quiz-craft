@@ -1,73 +1,116 @@
-# React + TypeScript + Vite
+# 🧩 QuizCraft  
+**An accessible quiz builder built with React, Redux Toolkit, TypeScript, and Vite.**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+QuizCraft lets users **create, edit, validate, and preview quizzes** with support for single-choice, multiple-choice, and short-text questions — all saved locally in the browser with undo history, validation, and accessibility in mind.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ⚙️ Tech Stack
 
-## React Compiler
+| Category | Tools |
+|-----------|-------|
+| Frontend Framework | **React 19 + TypeScript + Vite** |
+| State Management | **Redux Toolkit** |
+| Styling | **Tailwind CSS** |
+| Validation | **Zod** |
+| Testing | **Vitest + Testing Library** (unit) / **Playwright** (E2E) |
+| Code Quality | **ESLint + Prettier + Husky + lint-staged** |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+### 1. Clone and install
+```bash
+git clone https://github.com/heshamelmasry77/quiz-craft
+cd quiz-craft
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs["recommended-typescript"],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+### 2. Run the dev server
+```bash
+npm run dev
 ```
+The app will be available at [http://localhost:5173](http://localhost:5173).
+
+### 3. Run tests
+- **Unit tests:**  
+  ```bash
+  npm run test
+  ```
+- **E2E tests (headless):**  
+  ```bash
+  npm run e2e
+  ```
+- **E2E tests (UI mode):**  
+  ```bash
+  npm run e2e:ui
+  ```
+
+> 📝 Note: The first time you run Playwright, install browsers using:
+> ```bash
+> npx playwright install
+> ```
+
+---
+
+## 📁 Project Structure
+
+```
+quiz-craft/
+├── public/               # Static assets
+├── src/
+│   ├── assets/           # Images, icons, etc.
+│   ├── components/
+│   │   └── ui/           # Shared UI components (Modal, Loader)
+│   ├── lib/              # Utilities (storage, validation, I/O helpers)
+│   ├── pages/            # Main pages (Builder, Preview, NotFound)
+│   ├── shared/           # Layout and app shell
+│   ├── store/            # Redux slices + hooks
+│   │   └── __tests__/    # Unit tests for slices
+│   ├── types/            # TypeScript types
+│   ├── validation/       # Zod schemas
+│   ├── index.css         # Tailwind base styles
+│   ├── main.tsx          # Entry point
+│   └── router.tsx        # Route configuration
+│
+├── e2e/                  # Playwright end-to-end tests
+├── tests/                # Test setup configs
+├── test-results/         # Playwright reports
+├── .husky/               # Pre-commit hooks
+├── eslint.config.js      # ESLint config
+├── playwright.config.ts  # Playwright setup
+├── vite.config.ts        # Vite setup
+└── tsconfig.*.json       # TypeScript configs
+```
+
+---
+
+## 🧠 Key Features
+
+- 🧩 Create, edit, and delete quiz questions  
+- 🔢 Single, multiple, and short-text types  
+- ♻️ Undo history for structural changes  
+- 💾 Auto-save to localStorage  
+- ✅ Validation with Zod  
+- 🔔 Confirmation modal before clearing  
+- ♿ Accessible interface (`aria-*`, live regions, keyboard-friendly)  
+- 🔄 Preview mode for quiz review  
+- 🧪 Tested via Vitest & Playwright  
+
+---
+
+## ✅ Test Summary
+
+| Test Type | Tool | Status |
+|------------|------|--------|
+| Unit Tests | Vitest | ✅ Passing |
+| E2E Tests | Playwright | ✅ Passing (Headless & UI modes) |
+| Linting | ESLint + Prettier | ✅ Clean |
+| Pre-commit | Husky + lint-staged | ✅ Configured |
+
+---
+
+## 📄 License
+
+MIT License © 2025 [Hesham El Masry](https://github.com/heshamelmasry77)
