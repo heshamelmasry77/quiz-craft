@@ -1,8 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "lib": ["ES2020", "DOM"],
-    "types": ["@playwright/test"]
+    "noEmit": true,
+    "moduleResolution": "Bundler",
+    "target": "ES2020",
+    "module": "ESNext",
+    "types": ["node", "@playwright/test"]
   },
-  "include": ["e2e"]
+  "include": ["e2e/**/*.ts"]
 }

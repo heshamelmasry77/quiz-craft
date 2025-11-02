@@ -47,6 +47,7 @@ export default function BuilderPage() {
         <h1 className="text-xl font-semibold mr-auto">Accessible Quiz Builder</h1>
 
         <button
+          data-testid="preview"
           className="px-3 py-2 border rounded-md bg-gray-100 hover:bg-gray-200 cursor-pointer"
           onClick={onPreview}
         >
@@ -60,6 +61,7 @@ export default function BuilderPage() {
           Undo
         </button>
         <button
+          data-testid="clear-quiz"
           className="px-3 py-2 border rounded-md cursor-pointer"
           onClick={() => {
             dispatch(
@@ -96,18 +98,21 @@ export default function BuilderPage() {
 
       <div className="flex gap-2">
         <button
+          data-testid="add-single"
           className="px-3 py-2 border rounded-md cursor-pointer"
           onClick={() => addQ("single")}
         >
           + Single choice
         </button>
         <button
+          data-testid="add-multiple"
           className="px-3 py-2 border rounded-md cursor-pointer"
           onClick={() => addQ("multiple")}
         >
           + Multiple choice
         </button>
         <button
+          data-testid="add-short"
           className="px-3 py-2 border rounded-md cursor-pointer"
           onClick={() => addQ("short")}
         >

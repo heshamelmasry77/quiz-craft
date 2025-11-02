@@ -39,10 +39,15 @@ export default function Modal() {
         </h2>
         <p className="mt-2 text-sm text-gray-700">{message}</p>
         <div className="mt-4 flex justify-end gap-2">
-          <button className="px-3 py-2 border rounded-md cursor-pointer" onClick={handleCancel}>
+          <button
+            data-testid="modal-cancel"
+            className="px-3 py-2 border rounded-md cursor-pointer"
+            onClick={handleCancel}
+          >
             {cancelText ?? "Cancel"}
           </button>
           <button
+            data-testid="modal-confirm"
             className="px-3 py-2 border rounded-md bg-red-600 text-white hover:bg-red-700 cursor-pointer"
             onClick={handleConfirm}
           >
