@@ -173,9 +173,9 @@ export default function BuilderPage() {
                 <fieldset className="mt-4">
                   <legend className="font-medium">Options</legend>
 
-                  <div className="flex items-center justify-between mt-1">
+                  <div className="flex items-center justify-end mt-1">
                     <button
-                      className="ml-auto px-2 py-1 border rounded-md cursor-pointer"
+                      className="px-2 py-1 border rounded-md cursor-pointer"
                       onClick={() => dispatch(addOption({ questionId: q.id }))}
                     >
                       + Add option
