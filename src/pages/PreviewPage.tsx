@@ -15,7 +15,7 @@ function isAutoGradable(type: string) {
   return type === "single" || type === "multiple";
 }
 
-function getCorrectOptionIds(q: { options: { id: string; isCorrect?: boolean }[] }) {
+function getCorrectOptionIds(q: { options: { id: string; isCorrect: boolean }[] }) {
   const ids: Record<string, true> = {};
   for (const option of q.options) {
     if (option.isCorrect) {
