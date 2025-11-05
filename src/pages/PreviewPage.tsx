@@ -182,7 +182,7 @@ export default function PreviewPage() {
   function renderChoices(
     qId: string,
     type: "single" | "multiple",
-    options: { id: string; text: string; isCorrect?: boolean }[],
+    options: { id: string; text: string; isCorrect: boolean }[],
   ) {
     const user = answers[qId];
     const correctIds = submitted ? getCorrectOptionIds({ options }) : null;
