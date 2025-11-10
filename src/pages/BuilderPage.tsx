@@ -8,6 +8,7 @@ import {
   undo,
   setQuestionType,
   updateQuestionTitle,
+  duplicateQuestion,
   addOption,
   removeOption,
   updateOptionText,
@@ -147,6 +148,18 @@ export default function BuilderPage() {
                   className="ml-auto"
                   onClick={() => dispatch(removeQuestion(q.id))}
                 >
+                  Remove
+                </Button>
+                <Button
+                  variant="neutral"
+                  size="sm"
+                  data-testid={`duplicate-${q.id}`}
+                  onClick={() => dispatch(duplicateQuestion({ id: q.id }))}
+                >
+                  Duplicate
+                </Button>
+
+                <Button variant="danger" size="sm" onClick={() => dispatch(removeQuestion(q.id))}>
                   Remove
                 </Button>
               </div>
