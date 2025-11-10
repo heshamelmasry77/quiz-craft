@@ -16,6 +16,13 @@ const newQuestion = (type: QuestionType = "single"): Question => ({
   options: type === "short" ? [] : blankOptions(),
 });
 
+const cloneQuestion = (q: Question): Question => ({
+  id: makeId(),
+  type: q.type,
+  title: q.title ? `${q.title} (copy)` : "",
+  options: q.type === "short" ? [] : q.options.map((o) => ({ ...o, id: makeId() })),
+});
+
 type QuizStoreState = QuizState & {
   history: QuizState[];
   hydrateError: string | null;
@@ -41,6 +48,13 @@ const quizSlice = createSlice({
     removeQuestion(state, action: PayloadAction<ID>) {
       pushHistory(state);
       state.questions = state.questions.filter((q) => q.id !== action.payload);
+    },
+    duplicateQuestion(state, action: PayloadAction<{ id: ID }>) {
+      const idx = state.questions.findIndex((q) => q.id === action.payload.id);
+      if (idx === -1) return;
+      pushHistory(state);
+      const copy = cloneQuestion(state.questions[idx]);
+      state.questions.splice(idx + 1, 0, copy);
     },
     clearAll(state) {
       if (state.questions.length) pushHistory(state);
@@ -129,6 +143,7 @@ export const {
   addQuestion,
   removeQuestion,
   clearAll,
+  duplicateQuestion,
   updateQuestionTitle,
   setQuestionType,
   addOption,
